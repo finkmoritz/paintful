@@ -3,7 +3,7 @@
     <head>
         <title>Pain(t)ful</title>
         <link rel="stylesheet" type="text/css" href="/css/style.css">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="/css/bootstrap-sketchy.min.css">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     </head>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -12,7 +12,9 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="javascript/script.js" type="text/javascript"></script>
     <body>
-        <div class="title-banner"><b>Pain<span style="color:black;">t</span>ful</b></div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <h1>Pain<span style="opacity:33%;">t</span>ful</h1>
+        </nav>
         <!--<ul id="messages"></ul>
         <form action="">
             <input id="m" autocomplete="off" /><button>Send</button>
@@ -20,12 +22,12 @@
         <div class="d-flex align-items-center justify-content-center min-vh-100" >
             <div class="container auto-width">
                 <div class="row">
-                    <label class="col" for="gameIdInput">Join Game: </label>
-                    <input class="col" id="gameIdInput" type="text" />
+                    <label class="col col-form-label" for="gameIdInput">Join Game: </label>
+                    <input class="col form-control" id="gameIdInput" type="text" placeholder="123456" />
                 </div>
                 <div class="row">&nbsp;</div>
                 <div class="row">
-                    <button class="col" id="newGameButton">New Game</button>
+                    <input type="submit" class="col btn btn-primary" id="newGameButton" value="New Game">
                 </div>
             </div>
         </div>
