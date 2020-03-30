@@ -1,4 +1,6 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: "Comic Sans MS", "Comic Sans", cursive !important; }
 
-.title-banner { background-color: rebeccapurple; border-radius: 0 0 10px 10px; color: white; font-size: 1.5rem; text-align: center; width: 100%; }
+.auto-width { width: auto !important; }
+
+.title-banner { background-color: rebeccapurple; border-radius: 0 0 10px 10px; color: white; font-size: 2rem; text-align: center; width: 100%; }
