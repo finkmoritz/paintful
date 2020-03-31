@@ -10,13 +10,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html');
 });
+app.get('/play.html', function(req, res){
+    res.sendFile(__dirname + '/play.html');
+});
 app.get('/about.html', function(req, res){
     res.sendFile(__dirname + '/about.html');
 });
 
 io.on('connection', function(socket){
-    socket.on('chat message', function(msg){
-        io.emit('chat message', msg);
+    socket.on('new player', function(username){
+        io.emit('show', 'screenPlayers');
+        io.emit('add player', username);
     });
 });
 
