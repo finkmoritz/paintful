@@ -9,15 +9,6 @@ window.onbeforeunload = function(){
 $(function () {
     const socket = io();
 
-    socket.on('update game', function(game){
-        console.log('received: update game '+JSON.stringify(game));
-        showOnly(game.currentScreen);
-        $('#playersList').empty();
-        for(let p of game.players) {
-            $('#playersList').append($('<li>').text(p.username));
-        }
-    });
-
     $('#usernameInputForm').submit(function(e){
         e.preventDefault(); // prevents page reloading
         const gameId = getUrlParam('gameId');
@@ -29,6 +20,16 @@ $(function () {
             socket.emit('new game', $('#usernameInput').val());
         }
         return false;
+    });
+
+    socket.on('update game', function(game){
+        console.log('received: update game '+JSON.stringify(game));
+        switch (game.currentScreen) {
+            case 'screenPlayers':
+                buildScreenPlayers(game);
+                break;
+            default: console.log('Unknown screen: '+game.currentScreen);
+        }
     });
 });
 
@@ -43,4 +44,12 @@ function showOnly(screenOn) {
 function getUrlParam(key) {
     const url = new URL(window.location.href);
     return  url.searchParams.get(key);
+}
+
+function buildScreenPlayers(game) {
+    showOnly(game.currentScreen);
+    $('#playersList').empty();
+    for(let p of game.players) {
+        $('#playersList').append($('<li>').text(p.username));
+    }
 }
