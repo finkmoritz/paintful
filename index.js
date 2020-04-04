@@ -24,6 +24,11 @@ io.on('connection', function(socket){
     const uploader = new SocketIOFileUpload();
     uploader.listen(socket);
     uploader.dir = uploadDir;
+
+    uploader.on("start", function (e) {
+        console.log('Upload started: '+JSON.stringify(e.file));
+    });
+
     uploader.on("saved", function (e) {
         console.log('Upload saved: '+JSON.stringify(e.file));
         setPainting(socket.id, e.file.path);

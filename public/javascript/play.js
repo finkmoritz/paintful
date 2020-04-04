@@ -11,7 +11,6 @@ $(function () {
     const instance = new SocketIOFileUpload(socket, {
         chunkSize: 1024 * 1000
     });
-    instance.listenOnInput(document.getElementById("file_input"));
 
     $('#usernameInputForm').submit(function(e){
         e.preventDefault(); // prevents page reloading
@@ -29,6 +28,16 @@ $(function () {
     $('#startGameForm').submit(function(e){
         e.preventDefault(); // prevents page reloading
         socket.emit('start game');
+        return false;
+    });
+
+    $('#uploadPainting').submit(function(e){
+        e.preventDefault(); // prevents page reloading
+        document.getElementById('drawingCanvas').toBlob(function (blob) {
+            const file = new File([blob], socket.id+'.png');
+            console.log('Submit file: '+file);
+            instance.submitFiles([file]);
+        });
         return false;
     });
 
@@ -64,6 +73,15 @@ function showOnly(screenOn) {
 function getUrlParam(key) {
     const url = new URL(window.location.href);
     return  url.searchParams.get(key);
+}
+
+function dataURLtoBlob(dataurl) {
+    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], {type:mime});
 }
 
 function buildScreenPlayers(game) {
