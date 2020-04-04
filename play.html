@@ -10,7 +10,8 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="javascript/play-script.js" type="text/javascript"></script>
+    <script src="javascript/play.js" type="text/javascript"></script>
+    <script src="javascript/draw.js" type="text/javascript"></script>
     <body>
         <div class="d-flex align-items-center justify-content-center min-vh-100" >
 
@@ -28,6 +29,18 @@
 
             <div class="container auto-width" id="screenPlayers">
                 <ul class="" id="playersList"></ul>
+                <form id="startGameForm" action="">
+                    <input class="btn btn-primary" type="submit" value="Start Game" />
+                </form>
+            </div>
+
+            <div class="container auto-width" id="screenDraw">
+                <p>
+                    <button type="button" class="btn btn-danger" onclick="clearCanvas();return false;">Reset</button>
+                </p>
+                <p>
+                    <canvas id="drawingCanvas"></canvas>
+                </p>
             </div>
         </div>
     </body>

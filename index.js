@@ -20,18 +20,26 @@ app.get('/about.html', function(req, res){
 io.on('connection', function(socket){
     socket.on('new game', function(username) {
         console.log('new game '+username);
-        let gameId = newGame(socket.id, username);
-        socket.join(gameId);
-        console.log('emit to '+gameId+': update game '+JSON.stringify(games.get(gameId)));
-        io.in(gameId).emit('update game', games.get(gameId));
+        const game = newGame(socket.id, username);
+        socket.join(game.id);
+        console.log('emit to '+game.id+': update game '+JSON.stringify(game));
+        io.in(game.id).emit('update game', game);
     });
+
     socket.on('join game', function(data) {
         let gameId = parseInt(data.gameId);
         console.log('join game '+data.username+', '+gameId);
-        joinGame(socket.id, data.username, gameId);
-        socket.join(gameId);
-        console.log('emit to '+gameId+': update game '+JSON.stringify(games.get(gameId)));
-        io.in(gameId).emit('update game', games.get(gameId));
+        const game = joinGame(socket.id, data.username, gameId);
+        socket.join(game.id);
+        console.log('emit to '+game.id+': update game '+JSON.stringify(game));
+        io.in(game.id).emit('update game', game);
+    });
+
+    socket.on('start game', function () {
+        console.log('start game');
+        const game = startGame(socket.id);
+        console.log('emit to '+game.id+': update game '+JSON.stringify(game));
+        io.in(game.id).emit('update game', game);
     });
 });
 
@@ -47,10 +55,11 @@ class Player {
 }
 
 class Game {
-    constructor(id, players, currentScreen) {
+    constructor(id, players) {
         this.id = id;
         this.players = players;
-        this.currentScreen = currentScreen;
+        this.currentScreen = 'screenPlayers';
+        this.started = false;
     }
 }
 
@@ -66,16 +75,26 @@ function getGame(socketId) {
 function newGame(socketId, username) {
     const players = [];
     players.push(createPlayer(socketId, username));
-    games.set(++maxGameId, new Game(maxGameId, players, 'screenPlayers'));
+    const game = new Game(maxGameId, players);
+    games.set(++maxGameId, game);
     socketIdToGameKey.set(socketId, maxGameId);
-    return maxGameId;
+    return game;
 }
 
 function joinGame(socketId, username, gameId) {
     socketIdToGameKey.set(socketId, gameId);
-    getGame(socketId).players.push(createPlayer(socketId, username));
+    const game = getGame(socketId);
+    game.players.push(createPlayer(socketId, username));
+    return game;
 }
 
 function createPlayer(socketId, username) {
     return new Player(socketId, username);
+}
+
+function startGame(socketId) {
+    const game = getGame(socketId);
+    game.started = true;
+    game.currentScreen = 'screenDraw';
+    return game;
 }

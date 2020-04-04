@@ -22,11 +22,21 @@ $(function () {
         return false;
     });
 
+    $('#startGameForm').submit(function(e){
+        e.preventDefault(); // prevents page reloading
+        socket.emit('start game');
+        return false;
+    });
+
     socket.on('update game', function(game){
         console.log('received: update game '+JSON.stringify(game));
+        showOnly(game.currentScreen);
         switch (game.currentScreen) {
             case 'screenPlayers':
                 buildScreenPlayers(game);
+                break;
+            case 'screenDraw':
+                buildScreenDraw(game);
                 break;
             default: console.log('Unknown screen: '+game.currentScreen);
         }
@@ -34,7 +44,7 @@ $(function () {
 });
 
 function showOnly(screenOn) {
-    const screens = ['screenUsername', 'screenPlayers'];
+    const screens = ['screenUsername', 'screenPlayers', 'screenDraw'];
     for (let screen of screens) {
         document.getElementById(screen).style.display = 'none';
     }
@@ -47,9 +57,12 @@ function getUrlParam(key) {
 }
 
 function buildScreenPlayers(game) {
-    showOnly(game.currentScreen);
     $('#playersList').empty();
     for(let p of game.players) {
         $('#playersList').append($('<li>').text(p.username));
     }
+}
+
+function buildScreenDraw(game) {
+
 }
