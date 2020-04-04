@@ -8,6 +8,10 @@ window.onbeforeunload = function(){
 
 $(function () {
     const socket = io();
+    const instance = new SocketIOFileUpload(socket, {
+        chunkSize: 1024 * 1000
+    });
+    instance.listenOnInput(document.getElementById("file_input"));
 
     $('#usernameInputForm').submit(function(e){
         e.preventDefault(); // prevents page reloading
@@ -40,6 +44,12 @@ $(function () {
                 break;
             default: console.log('Unknown screen: '+game.currentScreen);
         }
+    });
+
+    document.getElementById('uploadStatus').innerHTML = "";
+    socket.on('upload success', function(){
+        console.log('received: upload success');
+        document.getElementById('uploadStatus').innerHTML = "Successfully uploaded";
     });
 });
 

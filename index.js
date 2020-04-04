@@ -4,8 +4,11 @@ const http = require('http');
 const server = http.createServer(app);
 const io = require('socket.io')(server);
 const path = require('path');
+const SocketIOFileUpload = require("socketio-file-upload");
+SocketIOFileUpload.listen(app);
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(SocketIOFileUpload.router);
 
 app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html');
@@ -18,6 +21,16 @@ app.get('/about.html', function(req, res){
 });
 
 io.on('connection', function(socket){
+    const uploader = new SocketIOFileUpload();
+    uploader.listen(socket);
+    uploader.dir = uploadDir;
+    uploader.on("saved", function (e) {
+        console.log('Upload saved: '+JSON.stringify(e.file));
+        setPainting(socket.id, e.file.path);
+        console.log('emit to '+socket.id+': upload success');
+        io.to(socket.id).emit('upload success');
+    });
+
     socket.on('new game', function(username) {
         console.log('new game '+username);
         const game = newGame(socket.id, username);
@@ -51,6 +64,7 @@ class Player {
     constructor(socketId, username) {
         this.socketId = socketId;
         this.username = username;
+        this.painting = undefined;
     }
 }
 
@@ -66,10 +80,21 @@ class Game {
 let maxGameId = 0;
 const games = new Map();
 const socketIdToGameKey = new Map();
+const uploadDir = "/tmp";
 
 function getGame(socketId) {
     let gameKey = socketIdToGameKey.get(socketId);
     return games.get(gameKey);
+}
+
+function getPlayer(socketId) {
+    const game = getGame(socketId);
+    for(let player of game.players) {
+        if(player.socketId === socketId) {
+            return player;
+        }
+    }
+    return undefined;
 }
 
 function newGame(socketId, username) {
@@ -97,4 +122,9 @@ function startGame(socketId) {
     game.started = true;
     game.currentScreen = 'screenDraw';
     return game;
+}
+
+function setPainting(socketId, pathToFile) {
+    const player = getPlayer(socketId);
+    player.painting = pathToFile;
 }
