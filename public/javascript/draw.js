@@ -71,10 +71,7 @@ function getMobilePosY(e) {
 }
 
 function resizeCanvas() {
-    let size = 0.8 * window.innerWidth;
-    if(window.innerWidth > window.innerHeight) {
-        size = 0.8 * window.innerHeight;
-    }
+    let size = 0.6 * Math.min(window.innerWidth, window.innerHeight);
     canvas.width = size;
     canvas.height = size;
 }

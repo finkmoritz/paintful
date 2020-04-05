@@ -44,6 +44,7 @@ $(function () {
     socket.on('update game', function(game){
         console.log('received: update game '+JSON.stringify(game));
         showOnly(game.currentScreen);
+        buildGameInfo(game);
         switch (game.currentScreen) {
             case 'screenPlayers':
                 buildScreenPlayers(game);
@@ -75,13 +76,8 @@ function getUrlParam(key) {
     return  url.searchParams.get(key);
 }
 
-function dataURLtoBlob(dataurl) {
-    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-    while(n--){
-        u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new Blob([u8arr], {type:mime});
+function buildGameInfo(game) {
+    document.getElementById('gameIdDisplay').innerHTML = 'Game #'+game.id;
 }
 
 function buildScreenPlayers(game) {

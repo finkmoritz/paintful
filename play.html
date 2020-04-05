@@ -16,37 +16,44 @@
     <body>
         <div class="d-flex align-items-center justify-content-center min-vh-100" >
 
-            <div class="container auto-width" id="screenUsername">
-                <form id="usernameInputForm" action="">
-                    <p class="text-center">
-                        <label class="col" for="usernameInput">Choose a name:</label>
+            <div class="row">
+                <p class="container col-12">
+                    <span id="gameIdDisplay" class="badge badge-pill badge-secondary float-right"></span>
+                </p>
+
+                <div class="container col-12 auto-width" id="screenUsername">
+                    <form id="usernameInputForm" action="">
+                        <p class="text-center">
+                            <label class="col" for="usernameInput">Choose a name:</label>
+                        </p>
+                        <div class="row justify-content-between">
+                            <input class="col-8 form-control" id="usernameInput" type="text" placeholder="Name" autofocus />
+                            <input class="col-3 btn btn-primary" type="submit" value="Play" />
+                        </div>
+                    </form>
+                </div>
+
+                <div class="container col-12 auto-width" id="screenPlayers">
+                    <ul class="" id="playersList"></ul>
+                    <form id="startGameForm" action="">
+                        <input class="btn btn-primary" type="submit" value="Start Game" />
+                    </form>
+                </div>
+
+                <div class="container col-12 auto-width" id="screenDraw">
+                    <p>
+                        <button type="button" class="btn btn-danger" onclick="clearCanvas();return false;">Reset</button>
                     </p>
-                    <div class="row justify-content-between">
-                        <input class="col-8 form-control" id="usernameInput" type="text" placeholder="Name" />
-                        <input class="col-3 btn btn-primary" type="submit" value="Play" />
-                    </div>
-                </form>
+                    <p>
+                        <canvas id="drawingCanvas"></canvas>
+                    </p>
+                    <form id="uploadPainting" action="">
+                        <input class="btn btn-primary float-right" type="submit" value="Upload" />
+                    </form>
+                    <p id="uploadStatus"></p>
+                </div>
             </div>
 
-            <div class="container auto-width" id="screenPlayers">
-                <ul class="" id="playersList"></ul>
-                <form id="startGameForm" action="">
-                    <input class="btn btn-primary" type="submit" value="Start Game" />
-                </form>
-            </div>
-
-            <div class="container auto-width" id="screenDraw">
-                <p>
-                    <button type="button" class="btn btn-danger" onclick="clearCanvas();return false;">Reset</button>
-                </p>
-                <p>
-                    <canvas id="drawingCanvas"></canvas>
-                </p>
-                <form id="uploadPainting" action="">
-                    <input class="btn btn-primary" type="submit" value="Upload" />
-                </form>
-                <p id="uploadStatus"></p>
-            </div>
         </div>
     </body>
 </html>
