@@ -78,6 +78,10 @@ function getUrlParam(key) {
 
 function buildGameInfo(game) {
     document.getElementById('gameIdDisplay').innerHTML = 'Game #'+game.id;
+    document.getElementById('scoreDisplay').innerHTML = "";
+    for(let p of game.players) {
+        $('#scoreDisplay').append($('<span class="badge badge-pill" style="color: '+p.color+';"></span>').text(p.score));
+    }
 }
 
 function buildScreenPlayers(game) {
