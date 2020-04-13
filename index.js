@@ -87,6 +87,7 @@ let maxGameId = 0;
 const games = new Map();
 const socketIdToGameKey = new Map();
 const uploadDir = "/tmp";
+const colors = ['blue', 'red', 'green', 'yellow'];
 
 function getGame(socketId) {
     let gameKey = socketIdToGameKey.get(socketId);
@@ -108,7 +109,7 @@ function getPlayer(socketId) {
 
 function newGame(socketId, username) {
     const players = [];
-    players.push(createPlayer(socketId, username));
+    players.push(new Player(socketId, username, colors[0]));
     const game = new Game(maxGameId, players);
     games.set(++maxGameId, game);
     socketIdToGameKey.set(socketId, maxGameId);
@@ -118,12 +119,9 @@ function newGame(socketId, username) {
 function joinGame(socketId, username, gameId) {
     socketIdToGameKey.set(socketId, gameId);
     const game = getGame(socketId);
-    game.players.push(createPlayer(socketId, username));
+    const nPlayers = game.players.length;
+    game.players.push(new Player(socketId, username, colors[nPlayers]));
     return game;
-}
-
-function createPlayer(socketId, username) {
-    return new Player(socketId, username, "blue");
 }
 
 function startGame(socketId) {
