@@ -71,6 +71,7 @@ class Player {
         this.username = username;
         this.color = color;
         this.painting = undefined;
+        this.score = 0;
     }
 }
 

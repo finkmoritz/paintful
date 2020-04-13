@@ -16,12 +16,12 @@
     <body>
         <div class="d-flex align-items-center justify-content-center min-vh-100" >
 
-            <div class="row">
-                <p class="container col-12">
-                    <span id="gameIdDisplay" class="badge badge-pill badge-secondary float-right"></span>
-                </p>
+            <div class="container auto-width">
+                <div class="row">
+                    <span id="gameIdDisplay" class="badge badge-pill badge-secondary"></span>
+                </div>
 
-                <div class="container col-12 auto-width" id="screenUsername">
+                <div class="row" id="screenUsername">
                     <form id="usernameInputForm" action="">
                         <p class="text-center">
                             <label class="col" for="usernameInput">Choose a name:</label>
@@ -33,14 +33,14 @@
                     </form>
                 </div>
 
-                <div class="container col-12 auto-width" id="screenPlayers">
+                <div class="row" id="screenPlayers">
                     <ul id="playersList" class="list-group"></ul>
                     <form id="startGameForm" action="">
                         <input class="btn btn-primary" type="submit" value="Start Game" />
                     </form>
                 </div>
 
-                <div class="container col-12 auto-width" id="screenDraw">
+                <div class="row" id="screenDraw">
                     <p>
                         <button type="button" class="btn btn-danger" onclick="clearCanvas();return false;">Reset</button>
                     </p>
