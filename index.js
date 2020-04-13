@@ -66,9 +66,10 @@ server.listen(3000, function(){
 });
 
 class Player {
-    constructor(socketId, username) {
+    constructor(socketId, username, color) {
         this.socketId = socketId;
         this.username = username;
+        this.color = color;
         this.painting = undefined;
     }
 }
@@ -89,6 +90,9 @@ const uploadDir = "/tmp";
 
 function getGame(socketId) {
     let gameKey = socketIdToGameKey.get(socketId);
+    console.log('getGame('+socketId+'): '+JSON.stringify(socketIdToGameKey));
+    console.log('games:');
+    logMap(games);
     return games.get(gameKey);
 }
 
@@ -119,7 +123,7 @@ function joinGame(socketId, username, gameId) {
 }
 
 function createPlayer(socketId, username) {
-    return new Player(socketId, username);
+    return new Player(socketId, username, "blue");
 }
 
 function startGame(socketId) {
@@ -132,4 +136,10 @@ function startGame(socketId) {
 function setPainting(socketId, pathToFile) {
     const player = getPlayer(socketId);
     player.painting = pathToFile;
+}
+
+function logMap(map) {
+    for(let k of map.keys()) {
+        console.log(k+' -> '+JSON.stringify(map.get(k)));
+    }
 }

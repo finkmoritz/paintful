@@ -83,7 +83,7 @@ function buildGameInfo(game) {
 function buildScreenPlayers(game) {
     $('#playersList').empty();
     for(let p of game.players) {
-        $('#playersList').append($('<li>').text(p.username));
+        $('#playersList').append($('<li class="list-group-item" style="color: '+p.color+';">').text(p.username));
     }
 }
 
