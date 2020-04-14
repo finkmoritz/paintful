@@ -72,6 +72,20 @@ io.on('connection', function(socket){
         console.log('emit to '+game.id+': update game '+JSON.stringify(game));
         io.in(game.id).emit('update game', game);
     });
+
+    socket.on('guess', function (guess) {
+        console.log('guess: '+guess);
+        setGuess(socket.id, guess);
+        let game = startGame(socket.id);
+        if(allGuessesSubmitted(game)) {
+            game = showChoices(game);
+            console.log('emit to '+game.id+': update game '+JSON.stringify(game));
+            io.in(game.id).emit('update game', game);
+        } else {
+            console.log('emit to '+socket.id+': update game '+JSON.stringify(game));
+            io.to(socket.id).emit('update game', game);
+        }
+    });
 });
 
 server.listen(3000, function(){
@@ -86,6 +100,8 @@ class Player {
         this.currentScreen = 'screenPlayers';
         this.quest = '';
         this.painting = undefined;
+        this.guess = undefined;
+        this.choice = undefined;
         this.score = 0;
         this.waitText = '';
     }
@@ -97,6 +113,7 @@ class Game {
         this.players = [];
         this.started = false;
         this.currentRound = -1;
+        this.choices = [];
     }
 }
 
@@ -125,7 +142,7 @@ function generateQuest() {
     const nominals = ['Unicorn', 'Mailman', 'Bird', 'Pizza'];
     let randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
     let randomNominal = nominals[Math.floor(Math.random() * nominals.length)];
-    return 'Draw: '+randomAdjective+' '+randomNominal;
+    return randomAdjective+' '+randomNominal;
 }
 
 function getPlayer(socketId) {
@@ -182,6 +199,41 @@ function nextRound(game) {
     game.currentRound = game.currentRound + 1;
     for(let p of game.players) {
         p.currentScreen = 'screenGuess';
+        p.guess = undefined;
+    }
+    game.players[game.currentRound].currentScreen = 'screenWait';
+    game.players[game.currentRound].waitText = 'Waiting until the other players have made their guess on your painting...';
+    return game;
+}
+
+function setGuess(socketId, guess) {
+    const player = getPlayer(socketId);
+    player.guess = guess;
+    player.currentScreen = 'screenWait';
+    player.waitText = 'Waiting for the other players to submit their guess...';
+}
+
+function allGuessesSubmitted(game) {
+    let currentPlayer = game.players[game.currentRound];
+    for(let p of game.players) {
+        if(p.socketId !== currentPlayer.socketId && p.guess === undefined) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function showChoices(game) {
+    game.choices = [];
+    game.choices.push(game.players[game.currentRound].quest);
+    for(let p of game.players) {
+        if(p.guess !== undefined) {
+            game.choices.push(p.guess);
+        }
+    }
+    for(let p of game.players) {
+        p.currentScreen = 'screenChoices';
+        p.choice = undefined;
     }
     game.players[game.currentRound].currentScreen = 'screenWait';
     game.players[game.currentRound].waitText = 'Waiting until the other players have made their guess on your painting...';

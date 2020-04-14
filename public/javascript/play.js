@@ -41,6 +41,12 @@ $(function () {
         return false;
     });
 
+    $('#guessInputForm').submit(function(e){
+        e.preventDefault(); // prevents page reloading
+        socket.emit('guess', $('#guessInput').val());
+        return false;
+    });
+
     socket.on('update game', function(game){
         console.log('received: update game '+JSON.stringify(game));
         let myPlayer = getMyPlayer(game, socket.id);
@@ -59,6 +65,9 @@ $(function () {
                 break;
             case 'screenGuess':
                 buildScreenGuess(game);
+                break;
+            case 'screenChoices':
+                buildScreenChoices(game);
                 break;
             default: console.log('Unknown screen: '+currentScreen);
         }
@@ -106,11 +115,17 @@ function buildScreenPlayers(game) {
 }
 
 function buildScreenDraw(game, socketId) {
-    document.getElementById('questText').innerHTML = getMyPlayer(game, socketId).quest;
+    document.getElementById('questText').innerHTML = 'Draw: '+getMyPlayer(game, socketId).quest;
 }
 
 function buildScreenGuess(game) {
     let painting = game.players[game.currentRound].painting;
     let url = 'http://'+window.location.host+'/download?painting='+painting;
     $('#imgDisplay').append($('<img src="'+url+'"/>'));
+}
+
+function buildScreenChoices(game) {
+    let painting = game.players[game.currentRound].painting;
+    let url = 'http://'+window.location.host+'/download?painting='+painting;
+    $('#imgDisplayChoices').append($('<img src="'+url+'"/>'));
 }
