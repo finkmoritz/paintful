@@ -70,6 +70,7 @@ class Player {
         this.socketId = socketId;
         this.username = username;
         this.color = color;
+        this.currentScreen = 'screenPlayers';
         this.painting = undefined;
         this.score = 0;
     }
@@ -79,7 +80,6 @@ class Game {
     constructor(id, players) {
         this.id = id;
         this.players = players;
-        this.currentScreen = 'screenPlayers';
         this.started = false;
     }
 }
@@ -128,7 +128,9 @@ function joinGame(socketId, username, gameId) {
 function startGame(socketId) {
     const game = getGame(socketId);
     game.started = true;
-    game.currentScreen = 'screenDraw';
+    for(let p of game.players) {
+        p.currentScreen = 'screenDraw';
+    }
     return game;
 }
 

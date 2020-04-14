@@ -43,16 +43,17 @@ $(function () {
 
     socket.on('update game', function(game){
         console.log('received: update game '+JSON.stringify(game));
-        showOnly(game.currentScreen);
+        let currentScreen = getMyPlayer(game, socket.id).currentScreen;
+        showOnly(currentScreen);
         buildGameInfo(game);
-        switch (game.currentScreen) {
+        switch (currentScreen) {
             case 'screenPlayers':
                 buildScreenPlayers(game);
                 break;
             case 'screenDraw':
                 buildScreenDraw(game);
                 break;
-            default: console.log('Unknown screen: '+game.currentScreen);
+            default: console.log('Unknown screen: '+currentScreen);
         }
     });
 
@@ -62,6 +63,14 @@ $(function () {
         document.getElementById('uploadStatus').innerHTML = "Successfully uploaded";
     });
 });
+
+function getMyPlayer(game, socketId) {
+    for(let p of game.players) {
+        if(p.socketId === socketId) {
+            return p;
+        }
+    }
+}
 
 function showOnly(screenOn) {
     const screens = ['screenUsername', 'screenPlayers', 'screenDraw'];
@@ -80,7 +89,7 @@ function buildGameInfo(game) {
     document.getElementById('gameIdDisplay').innerHTML = 'Game #'+game.id;
     document.getElementById('scoreDisplay').innerHTML = "";
     for(let p of game.players) {
-        $('#scoreDisplay').append($('<span class="badge badge-pill" style="color: '+p.color+';"></span>').text(p.score));
+        $('#scoreDisplay').append($('<span class="col badge badge-pill" style="color: '+p.color+';"></span>').text(p.username+': '+p.score));
     }
 }
 
