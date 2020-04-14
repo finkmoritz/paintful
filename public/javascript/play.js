@@ -83,7 +83,7 @@ function getMyPlayer(game, socketId) {
 }
 
 function showOnly(screenOn) {
-    const screens = ['screenWait', 'screenUsername', 'screenPlayers', 'screenDraw', 'screenGuess'];
+    const screens = ['screenWait', 'screenUsername', 'screenPlayers', 'screenDraw', 'screenGuess', 'screenChoices'];
     for (let screen of screens) {
         document.getElementById(screen).style.display = 'none';
     }
@@ -128,4 +128,7 @@ function buildScreenChoices(game) {
     let painting = game.players[game.currentRound].painting;
     let url = 'http://'+window.location.host+'/download?painting='+painting;
     $('#imgDisplayChoices').append($('<img src="'+url+'"/>'));
+    for(let choice of game.choices) {
+        $('#choiceButtons').append($('<input class="col btn btn-primary" type="submit" value="'+choice+'" />'));
+    }
 }

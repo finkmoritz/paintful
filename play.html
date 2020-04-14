@@ -17,8 +17,8 @@
         <div class="d-flex align-items-center justify-content-center min-vh-100" >
 
             <div class="container auto-width">
-                <div class="row">
-                    <span id="gameIdDisplay" class="badge badge-pill badge-secondary"></span>
+                <div class="row justify-content-end">
+                    <span id="gameIdDisplay" class="col badge badge-pill badge-secondary"></span>
                 </div>
                 <div id="scoreDisplay" class="row"></div>
 
@@ -26,9 +26,9 @@
 
                 <div id="screenUsername" class="row" >
                     <form id="usernameInputForm" action="">
-                        <p class="text-center">
+                        <div class="row text-center">
                             <label class="col" for="usernameInput">Choose a name:</label>
-                        </p>
+                        </div>
                         <div class="row justify-content-between">
                             <input class="col-8 form-control" id="usernameInput" type="text" placeholder="Name" autofocus />
                             <input class="col-3 btn btn-primary" type="submit" value="Play" />
@@ -61,11 +61,11 @@
                 <div id="screenGuess" class="row">
                     <div id="imgDisplay" class="row"></div>
                     <form id="guessInputForm" action="">
-                        <p class="text-center">
+                        <div class="row text-center">
                             <label class="col" for="guessInput">What does this painting show?</label>
-                        </p>
+                        </div>
                         <div class="row justify-content-between">
-                            <input class="col-8 form-control" id="guessInput" type="text" placeholder="Burning Pizza, Lazy Unicorn, etc..." autofocus />
+                            <input id="guessInput" class="col-8 form-control" type="text" placeholder="Burning Pizza, Lazy Unicorn, etc..." autofocus />
                             <input class="col-3 btn btn-primary" type="submit" value="Submit" />
                         </div>
                     </form>
@@ -73,6 +73,12 @@
 
                 <div id="screenChoices" class="row">
                     <div id="imgDisplayChoices" class="row"></div>
+                    <div class="row text-center">
+                        <label class="col">What does this painting actually show?</label>
+                    </div>
+                    <form id="choiceForm" action="">
+                        <div id="choiceButtons" class="row"></div>
+                    </form>
                 </div>
             </div>
 
