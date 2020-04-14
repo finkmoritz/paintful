@@ -56,6 +56,12 @@ $(function () {
         return false;
     });
 
+    $('#nextRoundForm').submit(function(e){
+        e.preventDefault(); // prevents page reloading
+        socket.emit('next round');
+        return false;
+    });
+
     socket.on('update game', function(game){
         console.log('received: update game '+JSON.stringify(game));
         let myPlayer = getMyPlayer(game, socket.id);
@@ -147,6 +153,7 @@ function buildScreenChoices(game) {
 }
 
 function buildScreenResults(game) {
+    document.getElementById('resultsTable').innerHTML = "";
     for(let p of game.players) {
         let resultsRow;
         if(p.tendency > 0) {
@@ -162,5 +169,10 @@ function buildScreenResults(game) {
         resultsRow.append($('<td></td>').text(p.tendency > 0 ? '+'+p.tendency : p.tendency));
         resultsRow.append($('<td></td>').text(p.score));
         $('#resultsTable').append(resultsRow);
+    }
+    if(game.finished) {
+        $('#nextRoundForm').hide();
+    } else {
+        $('#nextRoundForm').show();
     }
 }

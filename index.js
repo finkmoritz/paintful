@@ -100,6 +100,14 @@ io.on('connection', function(socket){
             io.to(socket.id).emit('update game', game);
         }
     });
+
+    socket.on('next round', function () {
+        console.log('next round');
+        let game = getGame(socket.id);
+        game = nextRound(game);
+        console.log('emit to '+game.id+': update game '+JSON.stringify(game));
+        io.in(game.id).emit('update game', game);
+    });
 });
 
 server.listen(3000, function(){
@@ -127,6 +135,7 @@ class Game {
         this.id = id;
         this.players = [];
         this.started = false;
+        this.finished = false;
         this.currentRound = -1;
         this.choices = [];
     }
@@ -297,6 +306,9 @@ function evaluateRound(game) {
     }
     for(let p of game.players) {
         p.currentScreen = 'screenResults';
+    }
+    if(game.currentRound === game.players.length-1) {
+        game.finished = true;
     }
     return game;
 }
