@@ -19,6 +19,12 @@ app.get('/play.html', function(req, res){
 app.get('/about.html', function(req, res){
     res.sendFile(__dirname + '/about.html');
 });
+app.get('/download', function(req, res){
+    let file = req.query.painting;
+    if(file !== undefined) {
+        res.download(uploadDir+'/'+file);
+    }
+});
 
 io.on('connection', function(socket){
     const uploader = new SocketIOFileUpload();
@@ -31,10 +37,16 @@ io.on('connection', function(socket){
 
     uploader.on("saved", function (e) {
         console.log('Upload saved: '+JSON.stringify(e.file));
-        setPainting(socket.id, e.file.path);
+        setPainting(socket.id, e.file.name);
         let game = getGame(socket.id);
-        console.log('emit to '+socket.id+': update game '+JSON.stringify(game));
-        io.to(socket.id).emit('update game', game);
+        if(allPaintingsSubmitted(game)) {
+            game = nextRound(game);
+            console.log('emit to '+game.id+': update game '+JSON.stringify(game));
+            io.in(game.id).emit('update game', game);
+        } else {
+            console.log('emit to '+socket.id+': update game '+JSON.stringify(game));
+            io.to(socket.id).emit('update game', game);
+        }
     });
 
     socket.on('new game', function(username) {
@@ -84,6 +96,7 @@ class Game {
         this.id = id;
         this.players = [];
         this.started = false;
+        this.currentRound = -1;
     }
 }
 
@@ -94,7 +107,6 @@ const uploadDir = "/tmp";
 
 function getGame(socketId) {
     let gameKey = socketIdToGameKey.get(socketId);
-    console.log('getGame('+socketId+'): '+JSON.stringify(socketIdToGameKey));
     console.log('games:');
     logMap(games);
     return games.get(gameKey);
@@ -150,11 +162,30 @@ function startGame(socketId) {
     return game;
 }
 
-function setPainting(socketId, pathToFile) {
+function setPainting(socketId, painting) {
     const player = getPlayer(socketId);
-    player.painting = pathToFile;
+    player.painting = painting;
     player.currentScreen = 'screenWait';
     player.waitText = 'Waiting for the other players to finish their painting...';
+}
+
+function allPaintingsSubmitted(game) {
+    for(let p of game.players) {
+        if(p.painting === undefined) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function nextRound(game) {
+    game.currentRound = game.currentRound + 1;
+    for(let p of game.players) {
+        p.currentScreen = 'screenGuess';
+    }
+    game.players[game.currentRound].currentScreen = 'screenWait';
+    game.players[game.currentRound].waitText = 'Waiting until the other players have made their guess on your painting...';
+    return game;
 }
 
 function logMap(map) {
