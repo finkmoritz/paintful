@@ -22,7 +22,9 @@
                 </div>
                 <div id="scoreDisplay" class="row"></div>
 
-                <div class="row" id="screenUsername">
+                <div id="screenWait" class="row"></div>
+
+                <div id="screenUsername" class="row" >
                     <form id="usernameInputForm" action="">
                         <p class="text-center">
                             <label class="col" for="usernameInput">Choose a name:</label>
@@ -34,14 +36,14 @@
                     </form>
                 </div>
 
-                <div class="row" id="screenPlayers">
+                <div id="screenPlayers" class="row" >
                     <ul id="playersList" class="list-group"></ul>
                     <form id="startGameForm" action="">
                         <input class="btn btn-primary" type="submit" value="Start Game" />
                     </form>
                 </div>
 
-                <div class="row" id="screenDraw">
+                <div id="screenDraw" class="row" >
                     <p>
                         <button type="button" class="btn btn-danger" onclick="clearCanvas();return false;">Reset</button>
                     </p>
@@ -51,7 +53,6 @@
                     <form id="uploadPainting" action="">
                         <input class="btn btn-primary float-right" type="submit" value="Upload" />
                     </form>
-                    <p id="uploadStatus"></p>
                 </div>
             </div>
 

@@ -32,8 +32,9 @@ io.on('connection', function(socket){
     uploader.on("saved", function (e) {
         console.log('Upload saved: '+JSON.stringify(e.file));
         setPainting(socket.id, e.file.path);
-        console.log('emit to '+socket.id+': upload success');
-        io.to(socket.id).emit('upload success');
+        let game = getGame(socket.id);
+        console.log('emit to '+socket.id+': update game '+JSON.stringify(game));
+        io.to(socket.id).emit('update game', game);
     });
 
     socket.on('new game', function(username) {
@@ -73,6 +74,7 @@ class Player {
         this.currentScreen = 'screenPlayers';
         this.painting = undefined;
         this.score = 0;
+        this.waitText = '';
     }
 }
 
@@ -137,6 +139,8 @@ function startGame(socketId) {
 function setPainting(socketId, pathToFile) {
     const player = getPlayer(socketId);
     player.painting = pathToFile;
+    player.currentScreen = 'screenWait';
+    player.waitText = 'Waiting for the other players to finish their painting...';
 }
 
 function logMap(map) {
