@@ -72,6 +72,7 @@ class Player {
         this.username = username;
         this.color = color;
         this.currentScreen = 'screenPlayers';
+        this.quest = '';
         this.painting = undefined;
         this.score = 0;
         this.waitText = '';
@@ -79,9 +80,9 @@ class Player {
 }
 
 class Game {
-    constructor(id, players) {
+    constructor(id) {
         this.id = id;
-        this.players = players;
+        this.players = [];
         this.started = false;
     }
 }
@@ -90,7 +91,6 @@ let maxGameId = 0;
 const games = new Map();
 const socketIdToGameKey = new Map();
 const uploadDir = "/tmp";
-const colors = ['blue', 'red', 'green', 'yellow'];
 
 function getGame(socketId) {
     let gameKey = socketIdToGameKey.get(socketId);
@@ -98,6 +98,22 @@ function getGame(socketId) {
     console.log('games:');
     logMap(games);
     return games.get(gameKey);
+}
+
+function addPlayer(game, socketId, username) {
+    const colors = ['blue', 'red', 'green', 'yellow'];
+    const nPlayers = game.players.length;
+    let newPlayer = new Player(socketId, username, colors[nPlayers]);
+    newPlayer.quest = generateQuest();
+    game.players.push(newPlayer);
+}
+
+function generateQuest() {
+    const adjectives = ['Angry', 'Frightened', 'Lazy', 'Burning'];
+    const nominals = ['Unicorn', 'Mailman', 'Bird', 'Pizza'];
+    let randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+    let randomNominal = nominals[Math.floor(Math.random() * nominals.length)];
+    return 'Draw: '+randomAdjective+' '+randomNominal;
 }
 
 function getPlayer(socketId) {
@@ -111,10 +127,9 @@ function getPlayer(socketId) {
 }
 
 function newGame(socketId, username) {
-    const players = [];
-    players.push(new Player(socketId, username, colors[0]));
-    const game = new Game(maxGameId, players);
+    const game = new Game(maxGameId);
     games.set(++maxGameId, game);
+    addPlayer(game, socketId, username);
     socketIdToGameKey.set(socketId, maxGameId);
     return game;
 }
@@ -122,8 +137,7 @@ function newGame(socketId, username) {
 function joinGame(socketId, username, gameId) {
     socketIdToGameKey.set(socketId, gameId);
     const game = getGame(socketId);
-    const nPlayers = game.players.length;
-    game.players.push(new Player(socketId, username, colors[nPlayers]));
+    addPlayer(game, socketId, username);
     return game;
 }
 

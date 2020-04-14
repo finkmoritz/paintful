@@ -55,7 +55,7 @@ $(function () {
                 buildScreenPlayers(game);
                 break;
             case 'screenDraw':
-                buildScreenDraw(game);
+                buildScreenDraw(game, socket.id);
                 break;
             default: console.log('Unknown screen: '+currentScreen);
         }
@@ -102,6 +102,6 @@ function buildScreenPlayers(game) {
     }
 }
 
-function buildScreenDraw(game) {
-
+function buildScreenDraw(game, socketId) {
+    document.getElementById('questDisplay').innerHTML = getMyPlayer(game, socketId).quest;
 }
