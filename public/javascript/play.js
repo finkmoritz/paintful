@@ -103,5 +103,5 @@ function buildScreenPlayers(game) {
 }
 
 function buildScreenDraw(game, socketId) {
-    document.getElementById('questDisplay').innerHTML = getMyPlayer(game, socketId).quest;
+    document.getElementById('questText').innerHTML = getMyPlayer(game, socketId).quest;
 }
