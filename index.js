@@ -76,9 +76,23 @@ io.on('connection', function(socket){
     socket.on('guess', function (guess) {
         console.log('guess: '+guess);
         setGuess(socket.id, guess);
-        let game = startGame(socket.id);
+        let game = getGame(socket.id);
         if(allGuessesSubmitted(game)) {
             game = showChoices(game);
+            console.log('emit to '+game.id+': update game '+JSON.stringify(game));
+            io.in(game.id).emit('update game', game);
+        } else {
+            console.log('emit to '+socket.id+': update game '+JSON.stringify(game));
+            io.to(socket.id).emit('update game', game);
+        }
+    });
+
+    socket.on('choice', function (choice) {
+        console.log('choice: '+choice);
+        setChoice(socket.id, choice);
+        let game = getGame(socket.id);
+        if(allChoicesSubmitted(game)) {
+            game = evaluateRound(game);
             console.log('emit to '+game.id+': update game '+JSON.stringify(game));
             io.in(game.id).emit('update game', game);
         } else {
@@ -103,6 +117,7 @@ class Player {
         this.guess = undefined;
         this.choice = undefined;
         this.score = 0;
+        this.tendency = 0;
         this.waitText = '';
     }
 }
@@ -156,8 +171,8 @@ function getPlayer(socketId) {
 }
 
 function newGame(socketId, username) {
-    const game = new Game(maxGameId);
-    games.set(++maxGameId, game);
+    const game = new Game(++maxGameId);
+    games.set(maxGameId, game);
     addPlayer(game, socketId, username);
     socketIdToGameKey.set(socketId, maxGameId);
     return game;
@@ -196,10 +211,12 @@ function allPaintingsSubmitted(game) {
 }
 
 function nextRound(game) {
-    game.currentRound = game.currentRound + 1;
+    game.currentRound += 1;
     for(let p of game.players) {
         p.currentScreen = 'screenGuess';
         p.guess = undefined;
+        p.choice = undefined;
+        p.tendency = 0;
     }
     game.players[game.currentRound].currentScreen = 'screenWait';
     game.players[game.currentRound].waitText = 'Waiting until the other players have made their guess on your painting...';
@@ -233,10 +250,54 @@ function showChoices(game) {
     }
     for(let p of game.players) {
         p.currentScreen = 'screenChoices';
-        p.choice = undefined;
     }
     game.players[game.currentRound].currentScreen = 'screenWait';
     game.players[game.currentRound].waitText = 'Waiting until the other players have made their guess on your painting...';
+    return game;
+}
+
+function setChoice(socketId, choice) {
+    const player = getPlayer(socketId);
+    player.choice = choice;
+    player.currentScreen = 'screenWait';
+    player.waitText = 'Waiting for the other players to submit their choice...';
+}
+
+function allChoicesSubmitted(game) {
+    let currentPlayer = game.players[game.currentRound];
+    for(let p of game.players) {
+        if(p.socketId !== currentPlayer.socketId && p.choice === undefined) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function evaluateRound(game) {
+    const correctAnswer = game.players[game.currentRound].quest;
+    for(let p of game.players) {
+        if(p.choice === undefined) continue;
+        if(p.guess === correctAnswer) {
+            p.score += 5;
+            p.tendency += 5;
+        }
+        if(p.choice === correctAnswer) {
+            p.score += 2;
+            p.tendency += 2;
+        } else {
+            for(let otherPlayer of game.players) {
+                if(p.socketId === otherPlayer.socketId) continue;
+                if(p.choice === otherPlayer.guess) {
+                    otherPlayer.score += 1;
+                    otherPlayer.tendency += 1;
+                    //TODO break; when choices displayed are unique
+                }
+            }
+        }
+    }
+    for(let p of game.players) {
+        p.currentScreen = 'screenResults';
+    }
     return game;
 }
 

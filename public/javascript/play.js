@@ -1,3 +1,5 @@
+let choice = undefined;
+
 $('document').ready(function(){
     showOnly('screenUsername');
 });
@@ -47,6 +49,13 @@ $(function () {
         return false;
     });
 
+    $('#choiceInputForm').submit(function(e){
+        e.preventDefault(); // prevents page reloading
+        socket.emit('choice', choice);
+        choice = undefined;
+        return false;
+    });
+
     socket.on('update game', function(game){
         console.log('received: update game '+JSON.stringify(game));
         let myPlayer = getMyPlayer(game, socket.id);
@@ -69,6 +78,9 @@ $(function () {
             case 'screenChoices':
                 buildScreenChoices(game);
                 break;
+            case 'screenResults':
+                buildScreenResults(game);
+                break;
             default: console.log('Unknown screen: '+currentScreen);
         }
     });
@@ -83,7 +95,7 @@ function getMyPlayer(game, socketId) {
 }
 
 function showOnly(screenOn) {
-    const screens = ['screenWait', 'screenUsername', 'screenPlayers', 'screenDraw', 'screenGuess', 'screenChoices'];
+    const screens = ['screenWait', 'screenUsername', 'screenPlayers', 'screenDraw', 'screenGuess', 'screenChoices', 'screenResults'];
     for (let screen of screens) {
         document.getElementById(screen).style.display = 'none';
     }
@@ -128,7 +140,27 @@ function buildScreenChoices(game) {
     let painting = game.players[game.currentRound].painting;
     let url = 'http://'+window.location.host+'/download?painting='+painting;
     $('#imgDisplayChoices').append($('<img src="'+url+'"/>'));
+    //TODO only display unique choices
     for(let choice of game.choices) {
-        $('#choiceButtons').append($('<input class="col btn btn-primary" type="submit" value="'+choice+'" />'));
+        $('#choiceButtons').append($('<input class="col btn btn-primary choice-button" type="submit" value="'+choice+'" onclick="choice=this.value;" />'));
+    }
+}
+
+function buildScreenResults(game) {
+    for(let p of game.players) {
+        let resultsRow;
+        if(p.tendency > 0) {
+            resultsRow = $('<tr class="table-success"></tr>');
+        } else if(p.tendency < 0) {
+            resultsRow = $('<tr class="table-danger"></tr>');
+        } else {
+            resultsRow = $('<tr></tr>');
+        }
+        resultsRow.append($('<th scope="row"></th>').text(p.username));
+        resultsRow.append($('<td></td>').text(p.guess));
+        resultsRow.append($('<td></td>').text(p.choice));
+        resultsRow.append($('<td></td>').text(p.tendency > 0 ? '+'+p.tendency : p.tendency));
+        resultsRow.append($('<td></td>').text(p.score));
+        $('#resultsTable').append(resultsRow);
     }
 }
