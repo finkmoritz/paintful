@@ -9,6 +9,6 @@
     "socketio-file-upload": "^0.7.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.3"
   }
 }
