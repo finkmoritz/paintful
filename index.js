@@ -36,77 +36,105 @@ io.on('connection', function(socket){
     });
 
     uploader.on("saved", function (e) {
-        console.log('Upload saved: '+JSON.stringify(e.file));
-        setPainting(socket.id, e.file.name);
-        let game = getGame(socket.id);
-        if(allPaintingsSubmitted(game)) {
-            game = nextRound(game);
-            console.log('emit to '+game.id+': update game '+JSON.stringify(game));
-            io.in(game.id).emit('update game', game);
-        } else {
-            console.log('emit to '+socket.id+': update game '+JSON.stringify(game));
-            io.to(socket.id).emit('update game', game);
+        try {
+            console.log('Upload saved: '+JSON.stringify(e.file));
+            setPainting(socket.id, e.file.name);
+            let game = getGame(socket.id);
+            if(allPaintingsSubmitted(game)) {
+                game = nextRound(game);
+                console.log('emit to '+game.id+': update game '+JSON.stringify(game));
+                io.in(game.id).emit('update game', game);
+            } else {
+                console.log('emit to '+socket.id+': update game '+JSON.stringify(game));
+                io.to(socket.id).emit('update game', game);
+            }
+        } catch(e) {
+            handleError(e, socket.id);
         }
     });
 
     socket.on('new game', function(username) {
-        console.log('new game '+username);
-        const game = newGame(socket.id, username);
-        socket.join(game.id);
-        console.log('emit to '+game.id+': update game '+JSON.stringify(game));
-        io.in(game.id).emit('update game', game);
+        try {
+            console.log('new game '+username);
+            const game = newGame(socket.id, username);
+            socket.join(game.id);
+            console.log('emit to '+game.id+': update game '+JSON.stringify(game));
+            io.in(game.id).emit('update game', game);
+        } catch(e) {
+            handleError(e, socket.id);
+        }
     });
 
     socket.on('join game', function(data) {
-        let gameId = parseInt(data.gameId);
-        console.log('join game '+data.username+', '+gameId);
-        const game = joinGame(socket.id, data.username, gameId);
-        socket.join(game.id);
-        console.log('emit to '+game.id+': update game '+JSON.stringify(game));
-        io.in(game.id).emit('update game', game);
+        try {
+            let gameId = parseInt(data.gameId);
+            console.log('join game '+data.username+', '+gameId);
+            const game = joinGame(socket.id, data.username, gameId);
+            socket.join(game.id);
+            console.log('emit to '+game.id+': update game '+JSON.stringify(game));
+            io.in(game.id).emit('update game', game);
+        } catch(e) {
+            handleError(e, socket.id);
+        }
     });
 
     socket.on('start game', function () {
-        console.log('start game');
-        const game = startGame(socket.id);
-        console.log('emit to '+game.id+': update game '+JSON.stringify(game));
-        io.in(game.id).emit('update game', game);
+        try {
+            console.log('start game');
+            const game = startGame(socket.id);
+            console.log('emit to '+game.id+': update game '+JSON.stringify(game));
+            io.in(game.id).emit('update game', game);
+        } catch(e) {
+            handleError(e, socket.id);
+        }
     });
 
     socket.on('guess', function (guess) {
-        console.log('guess: '+guess);
-        setGuess(socket.id, guess);
-        let game = getGame(socket.id);
-        if(allGuessesSubmitted(game)) {
-            game = showChoices(game);
-            console.log('emit to '+game.id+': update game '+JSON.stringify(game));
-            io.in(game.id).emit('update game', game);
-        } else {
-            console.log('emit to '+socket.id+': update game '+JSON.stringify(game));
-            io.to(socket.id).emit('update game', game);
+        try {
+            console.log('guess: '+guess);
+            setGuess(socket.id, guess);
+            let game = getGame(socket.id);
+            if(allGuessesSubmitted(game)) {
+                game = showChoices(game);
+                console.log('emit to '+game.id+': update game '+JSON.stringify(game));
+                io.in(game.id).emit('update game', game);
+            } else {
+                console.log('emit to '+socket.id+': update game '+JSON.stringify(game));
+                io.to(socket.id).emit('update game', game);
+            }
+        } catch(e) {
+            handleError(e, socket.id);
         }
     });
 
     socket.on('choice', function (choice) {
-        console.log('choice: '+choice);
-        setChoice(socket.id, choice);
-        let game = getGame(socket.id);
-        if(allChoicesSubmitted(game)) {
-            game = evaluateRound(game);
-            console.log('emit to '+game.id+': update game '+JSON.stringify(game));
-            io.in(game.id).emit('update game', game);
-        } else {
-            console.log('emit to '+socket.id+': update game '+JSON.stringify(game));
-            io.to(socket.id).emit('update game', game);
+        try {
+            console.log('choice: '+choice);
+            setChoice(socket.id, choice);
+            let game = getGame(socket.id);
+            if(allChoicesSubmitted(game)) {
+                game = evaluateRound(game);
+                console.log('emit to '+game.id+': update game '+JSON.stringify(game));
+                io.in(game.id).emit('update game', game);
+            } else {
+                console.log('emit to '+socket.id+': update game '+JSON.stringify(game));
+                io.to(socket.id).emit('update game', game);
+            }
+        } catch(e) {
+            handleError(e, socket.id);
         }
     });
 
     socket.on('next round', function () {
-        console.log('next round');
-        let game = getGame(socket.id);
-        game = nextRound(game);
-        console.log('emit to '+game.id+': update game '+JSON.stringify(game));
-        io.in(game.id).emit('update game', game);
+        try {
+            console.log('next round');
+            let game = getGame(socket.id);
+            game = nextRound(game);
+            console.log('emit to '+game.id+': update game '+JSON.stringify(game));
+            io.in(game.id).emit('update game', game);
+        } catch(e) {
+            handleError(e, socket.id);
+        }
     });
 });
 
@@ -148,8 +176,6 @@ const uploadDir = "/tmp";
 
 function getGame(socketId) {
     let gameKey = socketIdToGameKey.get(socketId);
-    console.log('games:');
-    logMap(games);
     return games.get(gameKey);
 }
 
@@ -311,6 +337,14 @@ function evaluateRound(game) {
         game.finished = true;
     }
     return game;
+}
+
+function handleError(e, socketId) {
+    console.error('ERROR receiving message from socket with ID '+socketId);
+    console.error('Original error: '+e.stack);
+    logMap(socketIdToGameKey);
+    logMap(games);
+    io.to(socketId).emit('error', 'Oops, looks like something went wrong...');
 }
 
 function logMap(map) {

@@ -90,6 +90,11 @@ $(function () {
             default: console.log('Unknown screen: '+currentScreen);
         }
     });
+
+    socket.on('error', function(msg){
+        console.log('received: error '+msg);
+        alert(msg);
+    });
 });
 
 function getMyPlayer(game, socketId) {
@@ -139,13 +144,16 @@ function buildScreenDraw(game, socketId) {
 function buildScreenGuess(game) {
     let painting = game.players[game.currentRound].painting;
     let url = 'http://'+window.location.host+'/download?painting='+painting;
+    document.getElementById('imgDisplay').innerHTML = "";
     $('#imgDisplay').append($('<img src="'+url+'"/>'));
 }
 
 function buildScreenChoices(game) {
     let painting = game.players[game.currentRound].painting;
     let url = 'http://'+window.location.host+'/download?painting='+painting;
+    document.getElementById('imgDisplayChoices').innerHTML = "";
     $('#imgDisplayChoices').append($('<img src="'+url+'"/>'));
+    document.getElementById('choiceButtons').innerHTML = "";
     //TODO only display unique choices
     for(let choice of game.choices) {
         $('#choiceButtons').append($('<input class="col btn btn-primary choice-button" type="submit" value="'+choice+'" onclick="choice=this.value;" />'));
