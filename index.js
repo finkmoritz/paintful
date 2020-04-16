@@ -10,6 +10,9 @@ SocketIOFileUpload.listen(app);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(SocketIOFileUpload.router);
 
+io.eio.pingInterval = 15000; //send ping every x ms
+io.eio.pingTimeout = 300000; //ms without pong to close connection
+
 app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html');
 });
@@ -49,7 +52,7 @@ io.on('connection', function(socket){
                 io.to(socket.id).emit('update game', game);
             }
         } catch(e) {
-            handleError(e, socket.id);
+            handleError(e, socket);
         }
     });
 
@@ -61,7 +64,7 @@ io.on('connection', function(socket){
             console.log('emit to '+game.id+': update game '+JSON.stringify(game));
             io.in(game.id).emit('update game', game);
         } catch(e) {
-            handleError(e, socket.id);
+            handleError(e, socket);
         }
     });
 
@@ -74,7 +77,7 @@ io.on('connection', function(socket){
             console.log('emit to '+game.id+': update game '+JSON.stringify(game));
             io.in(game.id).emit('update game', game);
         } catch(e) {
-            handleError(e, socket.id);
+            handleError(e, socket);
         }
     });
 
@@ -85,7 +88,7 @@ io.on('connection', function(socket){
             console.log('emit to '+game.id+': update game '+JSON.stringify(game));
             io.in(game.id).emit('update game', game);
         } catch(e) {
-            handleError(e, socket.id);
+            handleError(e, socket);
         }
     });
 
@@ -103,7 +106,7 @@ io.on('connection', function(socket){
                 io.to(socket.id).emit('update game', game);
             }
         } catch(e) {
-            handleError(e, socket.id);
+            handleError(e, socket);
         }
     });
 
@@ -121,7 +124,7 @@ io.on('connection', function(socket){
                 io.to(socket.id).emit('update game', game);
             }
         } catch(e) {
-            handleError(e, socket.id);
+            handleError(e, socket);
         }
     });
 
@@ -133,8 +136,12 @@ io.on('connection', function(socket){
             console.log('emit to '+game.id+': update game '+JSON.stringify(game));
             io.in(game.id).emit('update game', game);
         } catch(e) {
-            handleError(e, socket.id);
+            handleError(e, socket);
         }
+    });
+
+    socket.on('disconnect', function() {
+        console.log('Socket with ID '+socket.id+' disconnected');
     });
 });
 
@@ -339,12 +346,13 @@ function evaluateRound(game) {
     return game;
 }
 
-function handleError(e, socketId) {
-    console.error('ERROR receiving message from socket with ID '+socketId);
+function handleError(e, socket) {
+    console.error('ERROR receiving message from socket with ID '+socket.id);
     console.error('Original error: '+e.stack);
     logMap(socketIdToGameKey);
     logMap(games);
-    io.to(socketId).emit('error', 'Oops, looks like something went wrong...');
+    io.to(socket.id).emit('error', 'Oops, looks like something went wrong...');
+    console.error('Rooms: '+JSON.stringify(socket.rooms));
 }
 
 function logMap(map) {
