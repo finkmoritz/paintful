@@ -14,6 +14,11 @@
     <script src="javascript/play.js" type="text/javascript"></script>
     <script src="javascript/draw.js" type="text/javascript"></script>
     <body>
+        <div class="hidden alert-banner alert alert-dismissible alert-danger">
+            <button type="button" class="close" onclick="showAlert(false);">&times;</button>
+            <strong id="alertMsg"></strong>
+        </div>
+
         <div class="d-flex align-items-center justify-content-center min-vh-100" >
 
             <div class="container auto-width">
@@ -100,7 +105,6 @@
                     </form>
                 </div>
             </div>
-
         </div>
     </body>
 </html>

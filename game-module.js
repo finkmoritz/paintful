@@ -195,13 +195,13 @@ module.exports = {
         return game;
     },
 
-    handleError: function(e, socket) {
+    handleError: function(e, socket, io) {
         console.error('ERROR receiving message from socket with ID '+socket.id);
         console.error('Original error: '+e.stack);
         this.logMap(socketIdToGameKey);
         this.logMap(games);
-        io.to(socket.id).emit('error', 'Oops, looks like something went wrong...');
         console.error('Rooms: '+JSON.stringify(socket.rooms));
+        io.to(socket.id).emit('error', 'Oops, looks like something went wrong');
     },
 
     logMap: function(map) {

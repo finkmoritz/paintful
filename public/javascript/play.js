@@ -93,7 +93,7 @@ $(function () {
 
     socket.on('error', function(msg){
         console.log('received: error '+msg);
-        alert(msg);
+        showAlert(true, msg);
     });
 });
 
@@ -182,5 +182,14 @@ function buildScreenResults(game) {
         $('#nextRoundForm').hide();
     } else {
         $('#nextRoundForm').show();
+    }
+}
+
+function showAlert(show, msg) {
+    if(show) {
+        document.getElementById('alertMsg').innerHTML = msg;
+        $('.alert-banner').show();
+    } else {
+        $('.alert-banner').hide();
     }
 }

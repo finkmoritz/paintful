@@ -56,7 +56,7 @@ io.on('connection', function(socket){
                 io.to(socket.id).emit('update game', game);
             }
         } catch(e) {
-            GameModule.handleError(e, socket);
+            GameModule.handleError(e, socket, io);
         }
     });
 
@@ -68,7 +68,7 @@ io.on('connection', function(socket){
             console.log('emit to '+game.id+': update game '+JSON.stringify(game));
             io.in(game.id).emit('update game', game);
         } catch(e) {
-            GameModule.handleError(e, socket);
+            GameModule.handleError(e, socket, io);
         }
     });
 
@@ -81,7 +81,7 @@ io.on('connection', function(socket){
             console.log('emit to '+game.id+': update game '+JSON.stringify(game));
             io.in(game.id).emit('update game', game);
         } catch(e) {
-            GameModule.handleError(e, socket);
+            GameModule.handleError(e, socket, io);
         }
     });
 
@@ -92,7 +92,7 @@ io.on('connection', function(socket){
             console.log('emit to '+game.id+': update game '+JSON.stringify(game));
             io.in(game.id).emit('update game', game);
         } catch(e) {
-            GameModule.handleError(e, socket);
+            GameModule.handleError(e, socket, io);
         }
     });
 
@@ -110,7 +110,7 @@ io.on('connection', function(socket){
                 io.to(socket.id).emit('update game', game);
             }
         } catch(e) {
-            GameModule.handleError(e, socket);
+            GameModule.handleError(e, socket, io);
         }
     });
 
@@ -128,7 +128,7 @@ io.on('connection', function(socket){
                 io.to(socket.id).emit('update game', game);
             }
         } catch(e) {
-            GameModule.handleError(e, socket);
+            GameModule.handleError(e, socket, io);
         }
     });
 
@@ -140,7 +140,7 @@ io.on('connection', function(socket){
             console.log('emit to '+game.id+': update game '+JSON.stringify(game));
             io.in(game.id).emit('update game', game);
         } catch(e) {
-            GameModule.handleError(e, socket);
+            GameModule.handleError(e, socket, io);
         }
     });
 
