@@ -63,6 +63,9 @@ io.on('connection', function(socket){
     socket.on('new game', function(username) {
         try {
             console.log('new game '+username);
+            if(!GameModule.usernameIsValid(io, socket, username)) {
+                return;
+            }
             const game = GameModule.newGame(socket.id, username);
             socket.join(game.id);
             console.log('emit to '+game.id+': update game '+JSON.stringify(game));

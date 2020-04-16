@@ -195,6 +195,18 @@ module.exports = {
         return game;
     },
 
+    usernameIsValid: function(io, socket, username) {
+        if(username === '') {
+            io.to(socket.id).emit('invalid', {type:'username',value:username,msg:'Username cannot be empty'});
+            return false;
+        }
+        if(!/^[a-z0-9]+$/i.test(username)) {
+            io.to(socket.id).emit('invalid', {type:'username',value:username,msg:'Username can only contain alphanumeric characters'});
+            return false;
+        }
+        return true;
+    },
+
     handleError: function(e, socket, io) {
         console.error('ERROR receiving message from socket with ID '+socket.id);
         console.error('Original error: '+e.stack);
