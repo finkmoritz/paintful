@@ -16,6 +16,7 @@ class Player {
         this.score = 0;
         this.tendency = 0;
         this.waitText = '';
+        this.isWinner = false;
     }
 }
 
@@ -166,16 +167,21 @@ module.exports = {
     },
 
     evaluateRound: function(game) {
-        const correctAnswer = game.players[game.currentRound].quest;
+        const artist = game.players[game.currentRound];
+        const correctAnswer = artist.quest;
         for(let p of game.players) {
             if(p.choice === undefined) continue;
             if(p.guess === correctAnswer) {
                 p.score += 5;
                 p.tendency += 5;
+                artist.score += 5;
+                artist.tendency += 5;
             }
             if(p.choice === correctAnswer) {
                 p.score += 2;
                 p.tendency += 2;
+                artist.score += 2;
+                artist.tendency += 2;
             } else {
                 for(let otherPlayer of game.players) {
                     if(p.socketId === otherPlayer.socketId) continue;
@@ -192,8 +198,23 @@ module.exports = {
         }
         if(game.currentRound === game.players.length-1) {
             game.finished = true;
+            this.determineWinners(game.players);
         }
         return game;
+    },
+
+    determineWinners: function(players) {
+        let maxScore = 0;
+        for(let p of players) {
+            if(p.score > maxScore) {
+                maxScore = p.score;
+            }
+        }
+        for(let p of players) {
+            if(p.score === maxScore) {
+                p.isWinner = true;
+            }
+        }
     },
 
     usernameIsValid: function(io, socket, username) {

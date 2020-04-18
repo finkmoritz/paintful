@@ -135,7 +135,7 @@ function buildGameInfo(game) {
         $('#scoreDisplay').append($('<span class="col badge badge-pill" style="color: '+p.color+';"></span>').text(p.username+': '+p.score));
     }
     let currentPlayer = game.players[game.currentRound];
-    if(currentPlayer) {
+    if(!game.finished && currentPlayer) {
         setBorder(true, currentPlayer.color);
     } else {
         setBorder(false, '');
@@ -178,6 +178,7 @@ function buildScreenChoices(game) {
 }
 
 function buildScreenResults(game) {
+    const trophy = '&#127942;';
     document.getElementById('resultsTable').innerHTML = "";
     for(let p of game.players) {
         let resultsRow;
@@ -192,7 +193,7 @@ function buildScreenResults(game) {
         resultsRow.append($('<td></td>').text(p.guess));
         resultsRow.append($('<td></td>').text(p.choice));
         resultsRow.append($('<td></td>').text(p.tendency > 0 ? '+'+p.tendency : p.tendency));
-        resultsRow.append($('<td></td>').text(p.score));
+        resultsRow.append($('<td></td>').html(p.isWinner?p.score+' '+trophy:p.score));
         $('#resultsTable').append(resultsRow);
     }
     if(game.finished) {
