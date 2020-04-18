@@ -180,6 +180,9 @@ function buildScreenChoices(game) {
 function buildScreenResults(game) {
     const trophy = '&#127942;';
     document.getElementById('resultsTable').innerHTML = "";
+    game.players.sort(function (a,b) {
+        return b.score - a.score;
+    });
     for(let p of game.players) {
         let resultsRow;
         if(p.tendency > 0) {
