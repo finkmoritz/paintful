@@ -204,6 +204,36 @@ module.exports = {
             io.to(socket.id).emit('invalid', {type:'username',value:username,msg:'Username can only contain alphanumeric characters'});
             return false;
         }
+        let game = this.getGame(socket.id);
+        if(game !== undefined) {
+            for(let p of game.players) {
+                if(p.username === username) {
+                    io.to(socket.id).emit('invalid', {type:'username',value:username,msg:'User with name '+username+' already exists'});
+                    return false;
+                }
+            }
+        }
+        return true;
+    },
+
+    gameIdIsValid: function(io, socket, gameId) {
+        if(gameId === '') {
+            io.to(socket.id).emit('invalid', {type:'gameId',value:gameId,msg:'Game ID cannot be empty'});
+            return false;
+        }
+        if(!/^[0-9]+$/i.test(gameId)) {
+            io.to(socket.id).emit('invalid', {type:'gameId',value:gameId,msg:'Game ID must be a number'});
+            return false;
+        }
+        gameId = parseInt(gameId);
+        let game = games.get(gameId);
+        if(game === undefined) {
+            io.to(socket.id).emit('invalid', {type:'gameId',value:gameId,msg:'Invalid game ID'});
+            return false;
+        } else if(game.started) {
+            io.to(socket.id).emit('invalid', {type:'gameId',value:gameId,msg:'Game already started'});
+            return false;
+        }
         return true;
     },
 

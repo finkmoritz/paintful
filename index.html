@@ -9,6 +9,9 @@
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/siofu/client.js"></script>
+    <script src="javascript/welcome.js" type="text/javascript"></script>
     <body>
         <nav class="navbar navbar-expand navbar-light bg-light">
             <a class="navbar-brand" href="#">Pain<span class="text-muted">t</span>ful</a>
@@ -25,11 +28,14 @@
         </nav>
         <div class="d-flex align-items-center justify-content-center min-vh-100" >
             <div class="container auto-width">
-                <form id="joinGameForm" action="/play.html">
+                <!--<form id="joinGameForm" action="/play.html">
                     <p class="row justify-content-between">
                         <input class="col-7 form-control" id="gameIdInput" name="gameId" type="text" placeholder="Game Code" autofocus />
                         <input type="submit" class="col-4 btn btn-primary" id="joinGameButton" value="Join Game" />
                     </p>
+                </form>-->
+                <form id="joinGameForm" action="">
+                    <div id="gameIdInputGroup"></div>
                 </form>
                 <p class="row text-center">
                     <span class="col">or</span>

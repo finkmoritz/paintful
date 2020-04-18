@@ -79,10 +79,24 @@ io.on('connection', function(socket){
         try {
             let gameId = parseInt(data.gameId);
             console.log('join game '+data.username+', '+gameId);
+            if(!GameModule.gameIdIsValid(io,socket,gameId) || !GameModule.usernameIsValid(io,socket,data.username)) {
+                return;
+            }
             const game = GameModule.joinGame(socket.id, data.username, gameId);
             socket.join(game.id);
             console.log('emit to '+game.id+': update game '+JSON.stringify(game));
             io.in(game.id).emit('update game', game);
+        } catch(e) {
+            GameModule.handleError(e, socket, io);
+        }
+    });
+
+    socket.on('validate gameId', function(gameId) {
+        try {
+            console.log('validate gameId '+gameId);
+            if(GameModule.gameIdIsValid(io,socket,gameId)) {
+                io.to(socket.id).emit('redirect', '/play.html?gameId='+gameId);
+            }
         } catch(e) {
             GameModule.handleError(e, socket, io);
         }
