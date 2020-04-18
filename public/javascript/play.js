@@ -1,9 +1,7 @@
 let choice = undefined;
 
 $('document').ready(function(){
-    buildTextInput('#usernameInputGroup','usernameInput','',
-        'Choose a name:','',true,
-        'This will be your username.',undefined,'Play');
+    buildUsernameInput('', undefined);
     showOnly('screenUsername');
 });
 
@@ -21,8 +19,10 @@ $(function () {
         e.preventDefault(); // prevents page reloading
         const gameId = getUrlParam('gameId');
         if(gameId) {
-            console.log('emit: join game '+$('#usernameInput').val()+' '+gameId);
-            socket.emit('join game', { username: $('#usernameInput').val(), gameId: gameId });
+            if(validateUsername()) {
+                console.log('emit: join game '+$('#usernameInput').val()+' '+gameId);
+                socket.emit('join game', { username: $('#usernameInput').val(), gameId: gameId });
+            }
         } else {
             console.log('emit: new game '+$('#usernameInput').val());
             socket.emit('new game', $('#usernameInput').val());
@@ -202,39 +202,27 @@ function showAlert(show, msg) {
     }
 }
 
-function buildTextInput(container, id, value, label, placeholder, autofocus, helpText, errorText, buttonTitle) {
-    $(container).empty();
-    let formGroup;
-    if (errorText !== undefined) {
-        formGroup = $('<div class="form-group has-danger"></div>');
-    } else {
-        formGroup = $('<div class="form-group"></div>');
-    }
-    if (label !== undefined) {
-        formGroup.append($('<label for="' + id + '">' + label + '</label>'));
-    }
-    if (errorText !== undefined) {
-        formGroup.append($('<input id="' + id + '" class="form-control is-invalid" type="text" value="' + value + '" placeholder="' + placeholder + '" ' + (autofocus ? 'autofocus' : '') + ' />'));
-        formGroup.append($('<div class="invalid-feedback">' + errorText + '</div>'));
-    } else {
-        formGroup.append($('<input id="' + id + '" class="form-control" type="text" value="' + value + '" placeholder="' + placeholder + '" ' + (autofocus ? 'autofocus' : '') + ' />'));
-    }
-    if (helpText !== undefined) {
-        formGroup.append($('<small class="form-text text-muted">' + helpText + '</small>'));
-    }
-    if (buttonTitle) {
-        formGroup.append($('<input class="btn btn-primary" type="submit" value="' + buttonTitle + '" />'));
-    }
-    $(container).append(formGroup);
-}
-
 function showInvalidInput(type, value, msg) {
     switch (type) {
         case 'username':
-            buildTextInput('#usernameInputGroup','usernameInput',value,
-                'Choose a name:','',true,
-                'This will be your username.',msg,'Play');
+            buildUsernameInput(value, msg);
             break;
         default: console.error('Unknown invalid type: '+type);
     }
+}
+
+function buildUsernameInput(value, error) {
+    common.buildTextInput('#usernameInputGroup','usernameInput',value,
+        'Choose a name:','',true,
+        'This will be your username.',error,'Play');
+}
+
+function validateUsername() {
+    let username = document.getElementById('usernameInput').value;
+    let usernameError = validation.usernameError(username);
+    if(usernameError !== undefined) {
+        buildUsernameInput(username, usernameError);
+        return false;
+    }
+    return true;
 }

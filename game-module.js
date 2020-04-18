@@ -1,3 +1,8 @@
+const Validation = require('./public/javascript/validation');
+let maxGameId = 0;
+const games = new Map();
+const socketIdToGameKey = new Map();
+
 class Player {
     constructor(socketId, username, color) {
         this.socketId = socketId;
@@ -24,10 +29,6 @@ class Game {
         this.choices = [];
     }
 }
-
-let maxGameId = 0;
-const games = new Map();
-const socketIdToGameKey = new Map();
 
 module.exports = {
     getGame: function(socketId) {
@@ -196,12 +197,9 @@ module.exports = {
     },
 
     usernameIsValid: function(io, socket, username) {
-        if(username === '') {
-            io.to(socket.id).emit('invalid', {type:'username',value:username,msg:'Username cannot be empty'});
-            return false;
-        }
-        if(!/^[a-z0-9]+$/i.test(username)) {
-            io.to(socket.id).emit('invalid', {type:'username',value:username,msg:'Username can only contain alphanumeric characters'});
+        let usernameError = Validation.usernameError(username);
+        if(usernameError !== undefined) {
+            io.to(socket.id).emit('invalid', {type:'username',value:username,msg:usernameError});
             return false;
         }
         let game = this.getGame(socket.id);
@@ -217,12 +215,9 @@ module.exports = {
     },
 
     gameIdIsValid: function(io, socket, gameId) {
-        if(gameId === '') {
-            io.to(socket.id).emit('invalid', {type:'gameId',value:gameId,msg:'Game ID cannot be empty'});
-            return false;
-        }
-        if(!/^[0-9]+$/i.test(gameId)) {
-            io.to(socket.id).emit('invalid', {type:'gameId',value:gameId,msg:'Game ID must be a number'});
+        let gameIdError = Validation.gameIdError(gameId);
+        if(gameIdError !== undefined) {
+            io.to(socket.id).emit('invalid', {type:'gameId',value:gameId,msg:gameIdError});
             return false;
         }
         gameId = parseInt(gameId);

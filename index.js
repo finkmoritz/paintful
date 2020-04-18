@@ -63,6 +63,7 @@ io.on('connection', function(socket){
     socket.on('new game', function(username) {
         try {
             console.log('new game '+username);
+            username = username.trim();
             if(!GameModule.usernameIsValid(io, socket, username)) {
                 return;
             }
