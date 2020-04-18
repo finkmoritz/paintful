@@ -1,6 +1,6 @@
 $('document').ready(function(){
     buildTextInput('#gameIdInputGroup','gameIdInput','',
-        'Game ID:','',true,
+        'Game ID:','123456',true,
         'Join an existing game.',undefined,'Join');
 });
 
@@ -25,7 +25,7 @@ $(function () {
     socket.on('invalid', function (data) {
         console.log('received: invalid '+JSON.stringify(data));
         buildTextInput('#gameIdInputGroup','gameIdInput',data.value,
-            'Game ID:','',true,
+            'Game ID:','123456',true,
             'Join an existing game.',data.msg,'Join');
     });
 });

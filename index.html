@@ -28,22 +28,14 @@
         </nav>
         <div class="d-flex align-items-center justify-content-center min-vh-100" >
             <div class="container auto-width">
-                <!--<form id="joinGameForm" action="/play.html">
-                    <p class="row justify-content-between">
-                        <input class="col-7 form-control" id="gameIdInput" name="gameId" type="text" placeholder="Game Code" autofocus />
-                        <input type="submit" class="col-4 btn btn-primary" id="joinGameButton" value="Join Game" />
-                    </p>
-                </form>-->
-                <form id="joinGameForm" action="">
-                    <div id="gameIdInputGroup"></div>
+                <form id="newGameForm" class="row" action="/play.html">
+                    <input type="submit" class="col btn btn-primary" id="newGameButton" value="New Game">
                 </form>
-                <p class="row text-center">
-                    <span class="col">or</span>
-                </p>
-                <form id="newGameForm" action="/play.html">
-                    <p class="row">
-                        <input type="submit" class="col btn btn-primary" id="newGameButton" value="New Game">
-                    </p>
+                <div class="row text-center">
+                    <strong class="col padding">or</strong>
+                </div>
+                <form id="joinGameForm" class="row" action="">
+                    <div id="gameIdInputGroup"></div>
                 </form>
             </div>
         </div>
