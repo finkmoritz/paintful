@@ -48,7 +48,9 @@ $(function () {
 
     $('#guessInputForm').submit(function(e){
         e.preventDefault(); // prevents page reloading
-        socket.emit('guess', $('#guessInput').val());
+        if(validateGuess()) {
+            socket.emit('guess', $('#guessInput').val());
+        }
         return false;
     });
 
@@ -154,6 +156,7 @@ function buildScreenGuess(game) {
     let url = 'http://'+window.location.host+'/download?painting='+painting;
     document.getElementById('imgDisplay').innerHTML = "";
     $('#imgDisplay').append($('<img src="'+url+'"/>'));
+    buildGuessInput('', undefined);
 }
 
 function buildScreenChoices(game) {
@@ -217,11 +220,27 @@ function buildUsernameInput(value, error) {
         'This will be your username.',error,'Play');
 }
 
+function buildGuessInput(value, error) {
+    common.buildTextInput('#guessInputGroup','guessInput',value,
+        'What does this painting show?','',true,
+        'Hot Unicorn, Crazy Mailman, etc...',error,'Submit');
+}
+
 function validateUsername() {
     let username = document.getElementById('usernameInput').value;
     let usernameError = validation.usernameError(username);
     if(usernameError !== undefined) {
         buildUsernameInput(username, usernameError);
+        return false;
+    }
+    return true;
+}
+
+function validateGuess() {
+    let guess = document.getElementById('guessInput').value;
+    let guessError = validation.guessError(guess);
+    if(guessError !== undefined) {
+        buildGuessInput(guess, guessError);
         return false;
     }
     return true;

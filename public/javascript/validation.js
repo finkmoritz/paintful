@@ -18,4 +18,13 @@
         }
     };
 
+    exports.guessError = function(guess){
+        if(guess === '') {
+            return 'Guess cannot be empty';
+        }
+        if(!/^[a-z]+ [a-z]+$/i.test(guess)) {
+            return 'Guess must consist of two words';
+        }
+    };
+
 }(typeof exports === 'undefined' ? this.validation = {} : exports));

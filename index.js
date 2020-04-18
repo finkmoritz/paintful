@@ -79,11 +79,12 @@ io.on('connection', function(socket){
     socket.on('join game', function(data) {
         try {
             let gameId = parseInt(data.gameId);
-            console.log('join game '+data.username+', '+gameId);
-            if(!GameModule.gameIdIsValid(io,socket,gameId) || !GameModule.usernameIsValid(io,socket,data.username)) {
+            let username = data.username.trim();
+            console.log('join game '+username+', '+gameId);
+            if(!GameModule.gameIdIsValid(io,socket,gameId) || !GameModule.usernameIsValid(io,socket,username)) {
                 return;
             }
-            const game = GameModule.joinGame(socket.id, data.username, gameId);
+            const game = GameModule.joinGame(socket.id, username, gameId);
             socket.join(game.id);
             console.log('emit to '+game.id+': update game '+JSON.stringify(game));
             io.in(game.id).emit('update game', game);
@@ -117,6 +118,10 @@ io.on('connection', function(socket){
     socket.on('guess', function (guess) {
         try {
             console.log('guess: '+guess);
+            guess = guess.trim();
+            if(!GameModule.guessIsValid(io, socket, guess)) {
+                return;
+            }
             GameModule.setGuess(socket.id, guess);
             let game = GameModule.getGame(socket.id);
             if(GameModule.allGuessesSubmitted(game)) {

@@ -232,6 +232,15 @@ module.exports = {
         return true;
     },
 
+    guessIsValid: function(io, socket, guess) {
+        let guessError = Validation.guessError(guess);
+        if(guessError !== undefined) {
+            io.to(socket.id).emit('invalid', {type:'guess',value:guess,msg:guessError});
+            return false;
+        }
+        return true;
+    },
+
     handleError: function(e, socket, io) {
         console.error('ERROR receiving message from socket with ID '+socket.id);
         console.error('Original error: '+e.stack);
