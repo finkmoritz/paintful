@@ -134,6 +134,12 @@ function buildGameInfo(game) {
     for(let p of game.players) {
         $('#scoreDisplay').append($('<span class="col badge badge-pill" style="color: '+p.color+';"></span>').text(p.username+': '+p.score));
     }
+    let currentPlayer = game.players[game.currentRound];
+    if(currentPlayer) {
+        setBorder(true, currentPlayer.color);
+    } else {
+        setBorder(false, '');
+    }
 }
 
 function buildScreenWait(waitText) {
@@ -210,6 +216,9 @@ function showInvalidInput(type, value, msg) {
         case 'username':
             buildUsernameInput(value, msg);
             break;
+        case 'guess':
+            buildGuessInput(value, msg);
+            break;
         default: console.error('Unknown invalid type: '+type);
     }
 }
@@ -244,4 +253,12 @@ function validateGuess() {
         return false;
     }
     return true;
+}
+
+function setBorder(on, color) {
+    if(on) {
+        document.body.style.border = 'solid '+color+' 5px';
+    } else {
+        document.body.style.border = 'none';
+    }
 }
