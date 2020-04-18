@@ -1,8 +1,15 @@
 const Common = require('./public/javascript/common');
 const Validation = require('./public/javascript/validation');
+const fs = require("fs");
+const path = require("path");
+
+const adjectives = fs.readFileSync(path.join(__dirname, 'public', 'assets', 'adjectives.txt')).toString('utf-8').split("\n");;
+const nouns = fs.readFileSync(path.join(__dirname, 'public', 'assets', 'nouns.txt')).toString('utf-8').split("\n");;
+
 let maxGameId = 0;
 const games = new Map();
 const socketIdToGameKey = new Map();
+
 
 class Player {
     constructor(socketId, username, color) {
@@ -47,10 +54,8 @@ module.exports = {
     },
 
     generateQuest: function() {
-        const adjectives = ['Angry', 'Frightened', 'Lazy', 'Burning'];
-        const nominals = ['Unicorn', 'Mailman', 'Bird', 'Pizza'];
         let randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
-        let randomNominal = nominals[Math.floor(Math.random() * nominals.length)];
+        let randomNominal = nouns[Math.floor(Math.random() * nouns.length)];
         return randomAdjective+' '+randomNominal;
     },
 
