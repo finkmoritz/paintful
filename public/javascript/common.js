@@ -1,5 +1,13 @@
 (function(exports){
 
+    exports.shuffle = function(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    };
+
     exports.buildTextInput = function(container, id, value, label, placeholder, autofocus, helpText, errorText, buttonTitle) {
         $(container).empty();
         let formGroup;
@@ -24,6 +32,6 @@
             formGroup.append($('<input class="btn btn-primary" type="submit" value="' + buttonTitle + '" />'));
         }
         $(container).append(formGroup);
-    }
+    };
 
 }(typeof exports === 'undefined' ? this.common = {} : exports));

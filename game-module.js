@@ -1,3 +1,4 @@
+const Common = require('./public/javascript/common');
 const Validation = require('./public/javascript/validation');
 let maxGameId = 0;
 const games = new Map();
@@ -84,6 +85,7 @@ module.exports = {
         for(let p of game.players) {
             p.currentScreen = 'screenDraw';
         }
+        game.players = Common.shuffle(game.players);
         return game;
     },
 
@@ -188,7 +190,6 @@ module.exports = {
                     if(p.choice === otherPlayer.guess) {
                         otherPlayer.score += 1;
                         otherPlayer.tendency += 1;
-                        //TODO break; when choices displayed are unique
                     }
                 }
             }

@@ -171,8 +171,8 @@ function buildScreenChoices(game) {
     document.getElementById('imgDisplayChoices').innerHTML = "";
     $('#imgDisplayChoices').append($('<img src="'+url+'"/>'));
     document.getElementById('choiceButtons').innerHTML = "";
-    //TODO only display unique choices
-    for(let choice of game.choices) {
+    let shuffledChoices = new Set(common.shuffle(game.choices));
+    for(let choice of shuffledChoices) {
         $('#choiceButtons').append($('<input class="col btn btn-primary choice-button" type="submit" value="'+choice+'" onclick="choice=this.value;" />'));
     }
 }
