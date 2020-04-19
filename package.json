@@ -4,12 +4,15 @@
   "description": "Pain(t)ful web app",
   "dependencies": {
     "express": "^4.15.2",
+    "fresh": ">=0.5.2",
+    "mime": ">=1.4.1",
     "path": "^0.12.7",
     "serve-favicon": "^2.5.0",
     "socket.io": "^2.3.0",
     "socketio-file-upload": "^0.7.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.3"
+    "nodemon": "^2.0.3",
+    "debug": ">=2.6.9"
   }
 }
