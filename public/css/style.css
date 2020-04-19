@@ -7,7 +7,6 @@ body { background-image: url("/assets/paper-texture.jpg"); }
 
 .padding { padding: 50px 0 50px 0; }
 
-.title-banner { background-color: rebeccapurple; border-radius: 0 0 10px 10px; color: white; font-size: 2rem; text-align: center; width: 100%; }
 .alert-banner { margin: auto; position: fixed !important; top: 0; width: 100%; }
 
 .image-display { max-width: available !important; }

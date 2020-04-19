@@ -4,6 +4,7 @@ const http = require('http');
 const server = http.createServer(app);
 const io = require('socket.io')(server);
 const path = require('path');
+const favicon = require('serve-favicon');
 const SocketIOFileUpload = require("socketio-file-upload");
 const GameModule = require('./game-module');
 
@@ -12,6 +13,7 @@ const uploadDir = "/tmp";
 SocketIOFileUpload.listen(app);
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(favicon(path.join(__dirname,'public','assets','favicon.ico')));
 app.use(SocketIOFileUpload.router);
 
 io.eio.pingInterval = 15000; //send ping every x ms
