@@ -1,4 +1,5 @@
 let choice = undefined;
+let invitingFriend = false;
 
 $('document').ready(function(){
     buildUsernameInput('', undefined);
@@ -6,7 +7,12 @@ $('document').ready(function(){
 });
 
 window.onbeforeunload = function(){
-    return 'Are you sure you want to leave?';
+    alert(invitingFriend);
+    if(!invitingFriend) {
+        return 'Are you sure you want to leave?';
+    } else {
+        invitingFriend = false;
+    }
 };
 
 $(function () {
@@ -157,6 +163,16 @@ function buildScreenPlayers(game) {
     } else {
         $('#startGameForm').show();
         $('#minPlayersInfo').hide();
+    }
+    $('#inviteFriend').empty();
+    let inviteMsg = encodeURI("Join my Pain(t)ful game: "+window.location.href+"/play?gameId="+game.id);
+    switch(common.getMobileOperatingSystem()) {
+        case "Android":
+            $('#inviteFriend').append('<a href="whatsapp://send?text='+inviteMsg+'" onclick="invitingFriend=true;">Send link via WhatsApp</a>');
+            break;
+        case "iOS":
+            $('#inviteFriend').append('<a href="https://wa.me/?text='+inviteMsg+'" onclick="invitingFriend=true;">Send link via WhatsApp</a>');
+            break;
     }
 }
 
