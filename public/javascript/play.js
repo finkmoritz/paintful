@@ -7,7 +7,6 @@ $('document').ready(function(){
 });
 
 window.onbeforeunload = function(){
-    alert(invitingFriend);
     if(!invitingFriend) {
         return 'Are you sure you want to leave?';
     } else {
