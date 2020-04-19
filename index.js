@@ -23,6 +23,12 @@ app.get('/', function(req, res){
 app.get('/play.html', function(req, res){
     res.sendFile(__dirname + '/play.html');
 });
+app.get('/howtoplay.html', function(req, res){
+    res.sendFile(__dirname + '/howtoplay.html');
+});
+app.get('/contribute.html', function(req, res){
+    res.sendFile(__dirname + '/contribute.html');
+});
 app.get('/about.html', function(req, res){
     res.sendFile(__dirname + '/about.html');
 });
