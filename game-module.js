@@ -3,8 +3,8 @@ const Validation = require('./public/javascript/validation');
 const fs = require("fs");
 const path = require("path");
 
-const adjectives = fs.readFileSync(path.join(__dirname, 'public', 'assets', 'adjectives.txt')).toString('utf-8').split("\n");;
-const nouns = fs.readFileSync(path.join(__dirname, 'public', 'assets', 'nouns.txt')).toString('utf-8').split("\n");;
+const adjectives = fs.readFileSync(path.join(__dirname, 'public', 'assets', 'adjectives.txt')).toString('utf-8').split("\n");
+const nouns = fs.readFileSync(path.join(__dirname, 'public', 'assets', 'nouns.txt')).toString('utf-8').split("\n");
 
 let maxGameId = 0;
 const games = new Map();
