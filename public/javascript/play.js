@@ -151,6 +151,13 @@ function buildScreenPlayers(game) {
     for(let p of game.players) {
         $('#playersList').append($('<li class="list-group-item" style="color: '+p.color+';">').text(p.username));
     }
+    if(game.players.length < 3) {
+        $('#startGameForm').hide();
+        $('#minPlayersInfo').show();
+    } else {
+        $('#startGameForm').show();
+        $('#minPlayersInfo').hide();
+    }
 }
 
 function buildScreenDraw(game, socketId) {

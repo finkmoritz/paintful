@@ -107,9 +107,13 @@ io.on('connection', function(socket){
     socket.on('start game', function () {
         try {
             console.log('start game');
-            const game = GameModule.startGame(socket.id);
-            console.log('emit to '+game.id+': update game '+JSON.stringify(game));
-            io.in(game.id).emit('update game', game);
+            if(GameModule.getGame(socket.id).players.length < 3) {
+                io.to(socket.id).emit('error', 'At least three players need to join a game before it can be started');
+            } else {
+                const game = GameModule.startGame(socket.id);
+                console.log('emit to '+game.id+': update game '+JSON.stringify(game));
+                io.in(game.id).emit('update game', game);
+            }
         } catch(e) {
             GameModule.handleError(e, socket, io);
         }
