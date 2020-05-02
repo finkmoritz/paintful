@@ -33,12 +33,14 @@ function beginDrawMobile (e) {
 }
 
 function doDraw (e) {
+    e.preventDefault(); //prevent page scrolling
     if (mousePressed) {
         draw(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, true);
     }
 }
 
 function doDrawMobile (e) {
+    e.preventDefault(); //prevent page scrolling
     if (mousePressed) {
         draw(getMobilePosX(e) - $(this).offset().left, getMobilePosY(e) - $(this).offset().top, true);
     }
