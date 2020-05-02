@@ -18,8 +18,8 @@ $('document').ready(function(){
     canvas.addEventListener("touchmove", doDrawMobile);
 
     canvas.addEventListener("mouseup", endDraw);
-    canvas.addEventListener("touchend", endDraw);
     canvas.addEventListener("mouseleave", endDraw);
+    canvas.addEventListener("touchend", endDrawMobile);
 });
 
 function beginDraw (e) {
@@ -50,6 +50,10 @@ function endDraw (e) {
     mousePressed = false;
 }
 
+function endDrawMobile (e) {
+    mousePressed = false;
+}
+
 function draw(x, y, isDown) {
     if (isDown) {
         ctx.beginPath();
@@ -60,8 +64,11 @@ function draw(x, y, isDown) {
         ctx.lineTo(x, y);
         ctx.closePath();
         ctx.stroke();
+    } else {
+        ctx.fillRect(x-1,y-1,1,1);
     }
-    lastX = x; lastY = y;
+    lastX = x;
+    lastY = y;
 }
 
 function getMobilePosX(e) {
