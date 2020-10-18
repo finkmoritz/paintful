@@ -1,4 +1,9 @@
 # Pain(t)ful
+
+Online drawing party game using node.js & socket.io.
+
+<img src="https://github.com/finkmoritz/paintful/blob/master/paintful_preview.png" alt="Preview" width="200"/>
+
 ## Setup & run
 * `git clone` the repository
 * Start the server with `node index.js`
