@@ -2,7 +2,7 @@
 
 Online drawing party game using node.js & socket.io.
 
-<img src="https://github.com/finkmoritz/paintful/blob/master/paintful_preview.png" alt="Preview" width="200"/>
+<img src="https://github.com/finkmoritz/paintful/blob/master/paintful_preview.png" alt="Preview" width="500px"/>
 
 ## Setup & run
 * `git clone` the repository
