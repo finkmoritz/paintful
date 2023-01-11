@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Pain(t)ful web app",
   "dependencies": {
-    "express": "^4.15.2",
+    "express": "^4.18.2",
     "fresh": ">=0.5.2",
     "mime": ">=1.4.1",
     "path": "^0.12.7",
